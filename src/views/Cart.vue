@@ -1,14 +1,7 @@
 <script>
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
-
 export default {
-	components: {
-		Loading,
-	},
 	data() {
 		return {
-			isLoading: false,
 			cartList: [],
 			totalPrice: 0,
 			form: {
@@ -24,30 +17,32 @@ export default {
 	},
 	methods: {
 		async getCartList() {
-			this.isLoading = true;
+			let loader = this.$loading.show();
 			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/cart`;
 			try {
 				const res = await fetch(url);
 				const data = await res.json();
-				this.isLoading = false;
-				this.cartList = data.data.carts;
+				loader.hide();
 				if (!data.success) throw new Error(data.message);
-				// this.totalPrice = this.cartList.reduce((accum, val) => {
-				// 	// accum + val;
-				// 	console.log(accum, val.price);
-				// }, 0);
+				this.cartList = data.data.carts;
+				console.log(this.cartList);
+				this.totalPrice = this.cartList.reduce((accum, val) => {
+					accum + val.total;
+					console.log(accum, val.total);
+				}, 0);
+				console.log(this.totalPrice);
 			} catch (err) {
 				alert(err.message);
 			}
 		},
 		async removeSelectedCartItem(item) {
-			this.isLoading = true;
+			let loader = this.$loading.show();
 			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/cart/${item.id}`;
 			try {
 				const res = await fetch(url, { method: "delete" });
 				const data = await res.json();
 				const { success, message } = data;
-				this.isLoading = false;
+				loader.hide();
 				if (!success) throw new Error(message);
 				this.getCartList();
 			} catch (err) {
@@ -55,6 +50,7 @@ export default {
 			}
 		},
 		async submitForm() {
+			let loader = this.$loading.show();
 			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/order`;
 			const obj = {
 				data: this.form,
@@ -68,8 +64,10 @@ export default {
 					body: JSON.stringify(obj),
 				});
 				const data = await res.json();
+				loader.hide();
 				const { success, message } = data;
 				if (!success) throw new Error(message);
+				this.getCartList();
 				this.$refs.form.resetForm();
 				this.form.message = "";
 			} catch (err) {
@@ -86,7 +84,6 @@ export default {
 <template>
 	<div class="about">
 		<h1>This is 購物車頁面</h1>
-		<Loading v-model:active="isLoading" :can-cancel="false"></Loading>
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6">

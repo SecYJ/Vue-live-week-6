@@ -1,29 +1,25 @@
 <script>
 import Modal from "@/components/Modal.vue";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
 	components: {
 		Modal,
-		Loading,
 	},
 	data() {
 		return {
 			products: [],
-			modalOpen: false,
+			modalStatus: false,
 			tempProduct: {},
-			isLoading: false,
 		};
 	},
 	methods: {
 		async getProducts(page = 1) {
-			this.isLoading = true;
+			let loader = this.$loading.show();
 			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/products?page=${page}`;
 			try {
 				const res = await fetch(url);
 				const data = await res.json();
-				this.isLoading = false;
+				loader.hide();
 				if (!data.success) throw new Error(data.message);
 				this.products = data.products;
 			} catch (err) {
@@ -31,26 +27,24 @@ export default {
 			}
 		},
 		modalClose(boolean) {
-			this.modalOpen = boolean;
+			this.modalStatus = boolean;
 		},
 		async checkMoreDetails(product) {
-			// this.isLoading = true;
-			let loading = this.$loading.show();
+			let loader = this.$loading.show();
 			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/product/${product.id}`;
 			try {
 				const res = await fetch(url);
 				const data = await res.json();
-				// this.isLoading = false;
-				loading.hide();
+				loader.hide();
 				if (!data.success) throw new Error(data.message);
 				this.tempProduct = data.product;
-				this.modalOpen = true;
+				this.modalStatus = true;
 			} catch (err) {
 				alert(err.message);
 			}
 		},
 		async addToCart(product) {
-			this.isLoading = true;
+			let loader = this.$loading.show();
 			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/cart`;
 			const obj = {
 				data: {
@@ -65,7 +59,7 @@ export default {
 					body: JSON.stringify(obj),
 				});
 				const data = await res.json();
-				this.isLoading = false;
+				loader.hide();
 				const { success, message } = data;
 				if (!success) throw new Error(message);
 				alert(message);
@@ -83,7 +77,7 @@ export default {
 <template>
 	<div>
 		<h1>This is 產品列表頁面</h1>
-		<Loading v-model:active="isLoading" :can-cancel="false"></Loading>
+		<!-- <Loading v-model:active="isLoading" :can-cancel="false"></Loading> -->
 		<table class="table align-middle">
 			<thead>
 				<tr>
@@ -145,7 +139,7 @@ export default {
 		</table>
 
 		<Modal
-			:modal-open="modalOpen"
+			:modal-status="modalStatus"
 			:product="tempProduct"
 			@modal-close="modalClose"
 			@add-to-cart="addToCart"

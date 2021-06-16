@@ -1,16 +1,8 @@
 <template>
-	<!-- <h1>你現在在前台頁面</h1>
-	<div id="nav">
-		<router-link to="/">首页</router-link> |
-		<router-link to="/products">前台產品列表</router-link> |
-		<router-link to="/cart">前台產品列表</router-link> |
-		<router-link to="/backstage">後台購物車列表</router-link>
-	</div> -->
 	<router-view></router-view>
 </template>
 
 <style lang="scss">
-// @import "@1/assets/all.scss";
 @import "~bootstrap";
 
 #app {

@@ -4,7 +4,7 @@ import Modal from "bootstrap/js/dist/modal.js";
 export default {
 	emits: ["modalClose", "addToCart"],
 	props: {
-		modalOpen: {
+		modalStatus: {
 			type: Boolean,
 			default: false,
 		},
@@ -15,7 +15,7 @@ export default {
 	data() {
 		return {
 			modal: "",
-			modalCartQty: "",
+			modalCartQty: 1,
 		};
 	},
 	methods: {
@@ -35,9 +35,9 @@ export default {
 		});
 	},
 	watch: {
-		modalOpen(newVal) {
+		modalStatus(newVal) {
 			if (newVal === true) {
-				this.modalCartQty = "";
+				this.modalCartQty = 1;
 				this.modal.show();
 			}
 		},
