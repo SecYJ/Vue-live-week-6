@@ -77,7 +77,6 @@ export default {
 <template>
 	<div>
 		<h1>This is 產品列表頁面</h1>
-		<!-- <Loading v-model:active="isLoading" :can-cancel="false"></Loading> -->
 		<table class="table align-middle">
 			<thead>
 				<tr>

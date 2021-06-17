@@ -2,9 +2,6 @@
 import { token } from "@/views/backstage/token.js";
 
 export default {
-	data() {
-		return {};
-	},
 	mounted() {
 		this.verifyUser();
 	},

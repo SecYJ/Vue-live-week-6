@@ -12,10 +12,7 @@ export default {
 		async signIn() {
 			const url = `${process.env.VUE_APP_APIURL}/admin/signin`;
 			const { email, password } = this.user;
-			const obj = {
-				username: email,
-				password,
-			};
+			const obj = { username: email, password };
 			try {
 				const res = await fetch(url, {
 					method: "post",

@@ -22,15 +22,11 @@ export default {
 			try {
 				const res = await fetch(url);
 				const data = await res.json();
+				const { total } = data.data;
+				this.totalPrice = total;
 				loader.hide();
 				if (!data.success) throw new Error(data.message);
 				this.cartList = data.data.carts;
-				console.log(this.cartList);
-				this.totalPrice = this.cartList.reduce((accum, val) => {
-					accum + val.total;
-					console.log(accum, val.total);
-				}, 0);
-				console.log(this.totalPrice);
 			} catch (err) {
 				alert(err.message);
 			}
@@ -52,15 +48,11 @@ export default {
 		async submitForm() {
 			let loader = this.$loading.show();
 			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/order`;
-			const obj = {
-				data: this.form,
-			};
+			const obj = { data: this.form };
 			try {
 				const res = await fetch(url, {
 					method: "post",
-					headers: {
-						"content-type": "application/json",
-					},
+					headers: { "content-type": "application/json" },
 					body: JSON.stringify(obj),
 				});
 				const data = await res.json();
@@ -132,7 +124,7 @@ export default {
 						<tfoot>
 							<tr>
 								<td colspan="3" class="text-end">總計</td>
-								<!-- <td class="text-end">{{ totalPrice }}</td> -->
+								<td class="text-end">{{ totalPrice }}</td>
 							</tr>
 							<tr>
 								<td colspan="3" class="text-end text-success">
