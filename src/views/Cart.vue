@@ -22,11 +22,11 @@ export default {
 			try {
 				const res = await fetch(url);
 				const data = await res.json();
-				const { total } = data.data;
+				const { total, carts } = data.data;
 				this.totalPrice = total;
 				loader.hide();
 				if (!data.success) throw new Error(data.message);
-				this.cartList = data.data.carts;
+				this.cartList = carts;
 			} catch (err) {
 				alert(err.message);
 			}
