@@ -2,12 +2,8 @@
 import Modal from "bootstrap/js/dist/modal.js";
 
 export default {
-	emits: ["modalClose", "addToCart"],
+	emits: ["addToCart"],
 	props: {
-		modalStatus: {
-			type: Boolean,
-			default: false,
-		},
 		product: {
 			type: Object,
 		},
@@ -19,28 +15,24 @@ export default {
 		};
 	},
 	methods: {
-		modalClose() {
-			this.$emit("modalClose", false);
+		openModal() {
+			this.modal.show();
+		},
+		closeModal() {
+			this.modal.hide();
 		},
 		modalAddToCart() {
 			this.$emit("addToCart", {
 				...this.product,
 				qty: this.modalCartQty,
 			});
+			this.closeModal();
 		},
 	},
 	mounted() {
 		this.modal = new Modal(this.$refs.modal, {
 			backdrop: "static",
 		});
-	},
-	watch: {
-		modalStatus(newVal) {
-			if (newVal === true) {
-				this.modalCartQty = 1;
-				this.modal.show();
-			}
-		},
 	},
 };
 </script>

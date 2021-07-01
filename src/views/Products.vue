@@ -8,7 +8,6 @@ export default {
 	data() {
 		return {
 			products: [],
-			modalStatus: false,
 			tempProduct: {},
 		};
 	},
@@ -38,7 +37,7 @@ export default {
 				loader.hide();
 				if (!data.success) throw new Error(data.message);
 				this.tempProduct = data.product;
-				this.modalStatus = true;
+				this.$refs.modal.openModal();
 			} catch (err) {
 				alert(err.message);
 			}
@@ -138,7 +137,7 @@ export default {
 		</table>
 
 		<Modal
-			:modal-status="modalStatus"
+			ref="modal"
 			:product="tempProduct"
 			@modal-close="modalClose"
 			@add-to-cart="addToCart"

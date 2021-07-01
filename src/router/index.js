@@ -44,21 +44,10 @@ const routes = [
 		path: "/login",
 		component: () => import("@/views/Login.vue"),
 	},
-	// {
-	// 	path: "/products",
-	// 	name: "products",
-	// 	component: () => import("@/views/Products.vue"),
-	// },
-	// {
-	// 	path: "/cart",
-	// 	name: "cart",
-	// 	component: () => import("@/views/Cart.vue"),
-	// },
-	// {
-	// 	path: "/backstage",
-	// 	name: "backstage",
-	// 	component: () => import("@/views/Backstage.vue"),
-	// },
+	{
+		path: "/:pathMatch(.*)*",
+		component: () => import("@/views/NotFound.vue"),
+	},
 ];
 
 const router = createRouter({

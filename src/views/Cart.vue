@@ -66,6 +66,26 @@ export default {
 				alert(err.message);
 			}
 		},
+		async updateCartItem({ qty, product_id, id }) {
+			const url = `${process.env.VUE_APP_APIURL}/api/${process.env.VUE_APP_APIPATH}/cart/${id}`;
+			const cart = {
+				data: { product_id, qty },
+			};
+
+			try {
+				const res = await fetch(url, {
+					method: "put",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify(cart),
+				});
+				const data = await res.json();
+				const { message, success } = data;
+				if (!success) throw new Error(message);
+				this.getCartList();
+			} catch (err) {
+				alert(err);
+			}
+		},
 	},
 	mounted() {
 		this.getCartList();
@@ -74,7 +94,13 @@ export default {
 </script>
 
 <template>
-	<div class="about">
+	<div v-if="!cartList.length">
+		<h1>购物车为空</h1>
+		<router-link to="/products" class="text-decoration-none"
+			>点击这里前往购物吧 ^_^</router-link
+		>
+	</div>
+	<div class="about" v-else>
 		<h1>This is 購物車頁面</h1>
 		<div class="container">
 			<div class="row justify-content-center">
@@ -111,7 +137,12 @@ export default {
 								</td>
 								<td>
 									<div class="input-group input-group-sm">
-										{{ item.qty }} / {{ item.product.unit }}
+										<!-- {{ item.qty }} / {{ item.product.unit }} -->
+										<input
+											type="number"
+											v-model.number="item.qty"
+											@change="updateCartItem(item)"
+										/>
 									</div>
 								</td>
 								<td class="text-end">
@@ -136,6 +167,7 @@ export default {
 					</table>
 				</div>
 			</div>
+
 			<div class="my-5 row justify-content-center">
 				<Form
 					ref="form"
